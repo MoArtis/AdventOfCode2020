@@ -10,9 +10,9 @@ namespace AOC_2020_07
     {
         static void Main(string[] args)
         {
-            // const string inputPath = "./input.txt";
+            const string inputPath = "./input.txt";
             // const string inputPath = "./testInput.txt";
-            const string inputPath = "./testInputPart2.txt";
+            // const string inputPath = "./testInputPart2.txt";
 
             var bagRulesProcessor = new BagRulesProcessor();
             bagRulesProcessor.ProcessInput(inputPath);
