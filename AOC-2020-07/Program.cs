@@ -10,9 +10,9 @@ namespace AOC_2020_07
     {
         static void Main(string[] args)
         {
-            const string inputPath = "./input.txt";
+            // const string inputPath = "./input.txt";
             // const string inputPath = "./testInput.txt";
-            // const string inputPath = "./testInputPart2.txt";
+            const string inputPath = "./testInputPart2.txt";
 
             var bagRulesProcessor = new BagRulesProcessor();
             bagRulesProcessor.ProcessInput(inputPath);
@@ -43,7 +43,6 @@ namespace AOC_2020_07
 
                 //Part 1
                 var possibleContainerCount = CountPossibleContainers(bagColor);
-
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(
                     $"The bag color \"{bagColor}\" can be contained by that many other bag colors: {possibleContainerCount}");
@@ -51,7 +50,15 @@ namespace AOC_2020_07
 
                 //Part 2
                 var contentCount = CountContainedBags(bagColor);
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"The bag color \"{bagColor}\" contains that many bags: {contentCount}");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                //Part 2 - Iterative
+                contentCount = CountContainedBagsIterative(bagColor);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(
+                    $"(Iterative version) The bag color \"{bagColor}\" contains that many bags: {contentCount}");
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
@@ -156,9 +163,31 @@ namespace AOC_2020_07
                 }
 
                 return bagQty;
-                
+
                 // LINQ version
                 // return bag.content.Keys.Sum(contentBag => bag.content[contentBag] * (CountContainedBags(contentBag.Color) + 1));
+            }
+
+            private int CountContainedBagsIterative(string containerColor)
+            {
+                if (_bags.ContainsKey(containerColor) == false)
+                    return 0;
+
+                var stack = new Stack<Tuple<int, Bag>>();
+                stack.Push(new Tuple<int, Bag>(1, _bags[containerColor]));
+
+                var total = 0;
+                while (stack.Count > 0)
+                {
+                    var (qty, bag) = stack.Pop();
+                    total += qty;
+                    foreach (var contentBag in bag.content.Keys)
+                    {
+                        stack.Push(new Tuple<int, Bag>(qty * bag.content[contentBag], contentBag));
+                    }
+                }
+
+                return total - 1;
             }
         }
     }
